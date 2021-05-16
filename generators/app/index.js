@@ -1,4 +1,5 @@
 "use strict";
+
 const Generator = require("yeoman-generator");
 
 const defaultPackFormat = 7;
@@ -63,16 +64,34 @@ module.exports = class extends Generator {
   }
 
   writing() {
+    // Create beet configuration file
     this.fs.copyTpl(
       this.templatePath("beet.json"),
       this.destinationPath("beet.json"),
       { ...this.answers }
     );
 
+    // Create beet release configuration file
     this.fs.copyTpl(
       this.templatePath("beet-release.json"),
       this.destinationPath("beet-release.json"),
       { ...this.answers }
     );
+
+    // Generate resourepack
+    if (this.answers.generateResourcepack) {
+      this.fs.copy(
+        this.templatePath("resourcepack"),
+        this.destinationPath("resourcepack")
+      );
+      this.fs.copy(
+        this.templatePath("resourcepack/**/.*"),
+        this.destinationPath("resourcepack")
+      );
+    }
+  }
+
+  end() {
+    this.fs.delete(this.destinationPath("**/__yeoman_placeholder__"));
   }
 };

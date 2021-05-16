@@ -1,11 +1,13 @@
 "use strict";
 
+const { default: chalk } = require("chalk");
 const Generator = require("yeoman-generator");
 
 const defaultPackFormat = 7;
 
 module.exports = class extends Generator {
   async prompting() {
+    // General prompts
     this.answers = await this.prompt([
       {
         type: "input",
@@ -35,7 +37,11 @@ module.exports = class extends Generator {
         name: "generateResourcepack",
         message: "Generate resourcepack?",
         default: true
-      },
+      }
+    ]);
+
+    // Datapack prompts
+    const { generateDatapack } = await this.prompt([
       {
         type: "confirm",
         name: "generateDatapack",
@@ -43,8 +49,33 @@ module.exports = class extends Generator {
         default: true
       }
     ]);
+    this.answers.generateDatapack = generateDatapack;
+    if (generateDatapack) {
+      const { rootNamespace, datapackNamespace } = await this.prompt([
+        {
+          type: "input",
+          name: "rootNamespace",
+          message: "Root namespace of the datapack",
+          default: this.answers.author.toLowerCase()
+        },
+        {
+          type: "input",
+          name: "datapackNamespace",
+          message: "Sub-Namespace of the datapack",
+          default: this.answers.name.toLowerCase()
+        }
+      ]);
+      this.answers.rootNamespace = rootNamespace;
+      this.answers.datapackNamespace = datapackNamespace;
 
-    if (this.answers.generateResourcepack || this.answers.generateDatapack) {
+      this.log(
+        chalk.green(
+          `Creating datapack with namespace: '${rootNamespace}:${datapackNamespace}'`
+        )
+      );
+    }
+
+    if (this.answers.generateResourcepack || generateDatapack) {
       const { packFormat } = await this.prompt([
         {
           type: "input",
@@ -56,6 +87,7 @@ module.exports = class extends Generator {
       this.answers.packFormat = packFormat;
     }
 
+    // License prompts
     this.composeWith(require.resolve("generator-license"), {
       name: this.answers.author,
       email: this.answers.email,
@@ -89,9 +121,30 @@ module.exports = class extends Generator {
         this.destinationPath("resourcepack")
       );
     }
+
+    // Generate datapack
+    if (this.answers.generateDatapack) {
+      // Copy function tags
+      this.fs.copyTpl(
+        this.templatePath("datapack/data/minecraft"),
+        this.destinationPath("datapack/data/minecraft"),
+        { ...this.answers }
+      );
+
+      // Copy functions templates
+      this.fs.copyTpl(
+        this.templatePath(
+          "datapack/data/__root_namespace__/functions/__sub_namespace__"
+        ),
+        this.destinationPath(
+          `datapack/data/${this.answers.rootNamespace}/functions/${this.answers.datapackNamespace}`
+        ),
+        { ...this.answers }
+      );
+    }
   }
 
   end() {
-    this.fs.delete(this.destinationPath("**/__yeoman_placeholder__"));
+    this.fs.delete(this.destinationPath("**/__empty_dir_placeholder__"));
   }
 };

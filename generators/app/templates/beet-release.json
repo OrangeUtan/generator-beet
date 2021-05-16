@@ -1,0 +1,18 @@
+{
+    "extend": ["beet.json"],
+    "version": "0.0.0",
+    "pipeline": ["beet.contrib.minify_json"],
+    <%_ if (generateResourcepack) { -%>
+    "resource_pack": {
+        "zipped": true,
+        "name": "<%= name %>-resourcepack"
+    },
+    <%_ } -%>
+    <%_ if (generateDatapack) { -%>
+    "data_pack": {
+        "zipped": true,
+        "name": "<%= name %>-datapack"
+    },
+    <%_ } -%>
+    "output": "dist"
+}

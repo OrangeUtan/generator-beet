@@ -10,4 +10,4 @@ rules: {
 plugins: ["prettier"]
 ignorePatterns:
   - "coverage"
-  - "**/templates"
+  - "generators/app/templates"

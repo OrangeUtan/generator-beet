@@ -63,68 +63,16 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    this.fs.writeJSON(
+    this.fs.copyTpl(
+      this.templatePath("beet.json"),
       this.destinationPath("beet.json"),
-      this._createBeetConfig()
+      { ...this.answers }
     );
 
-    this.fs.writeJSON(
+    this.fs.copyTpl(
+      this.templatePath("beet-release.json"),
       this.destinationPath("beet-release.json"),
-      this._createBeetReleaseConfig()
+      { ...this.answers }
     );
-  }
-
-  _createBeetConfig() {
-    const config = {
-      name: this.answers.name,
-      author: this.answers.author,
-      description: this.answers.description,
-      output: "build"
-    };
-
-    // Add resourcepack
-    if (this.answers.generateResourcepack) {
-      config.resource_pack = {
-        load: ["resourcepack"],
-        pack_format: this.answers.packFormat
-      };
-    }
-
-    // Add datapack
-    if (this.answers.generateDatapack) {
-      config.data_pack = {
-        load: ["datapack"],
-        pack_format: this.answers.packFormat
-      };
-    }
-
-    return config;
-  }
-
-  _createBeetReleaseConfig() {
-    const config = {
-      extend: ["beet.json"],
-      version: "0.0.0",
-      pipeline: ["beet.contrib.minify_json"],
-      output: "dist"
-    };
-
-    // Add resourcepack
-    if (this.answers.generateResourcepack) {
-      config.resource_pack = {
-        zipped: true,
-        name: `${this.answers.name}-resourcepack`
-      };
-    }
-
-    // Add datapack
-    if (this.answers.generateDatapack) {
-      config.data_pack = {
-        zipped: true,
-        name: `${this.answers.name}-datapack`
-      };
-    }
-
-    return config;
   }
 };

@@ -1,0 +1,18 @@
+{
+    "name": "<%= name %>",
+    "author": "<%= author %>",
+    "description": "<%= description %>",
+    <%_ if (generateResourcepack) { -%>
+    "resource_pack": {
+        "load": ["resourcepack"],
+        "pack_format": <%= packFormat %>
+    },
+    <%_ } -%>
+    <%_ if (generateDatapack) { -%>
+    "data_pack": {
+        "load": ["datapack"],
+        "pack_format": <%= packFormat %>
+    },
+    <%_ } -%>
+    "output": "build"
+}

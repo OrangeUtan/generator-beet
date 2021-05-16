@@ -25,6 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.1.0",
+    "generator-license": "^5.4.0",
     "jest": "^26.6.3",
     "yeoman-generator": "^3.1.1",
     "yosay": "^2.0.2"
@@ -57,22 +58,6 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "eslintConfig": {
-    "extends": [
-      "xo",
-      "prettier"
-    ],
-    "env": {
-      "jest": true,
-      "node": true
-    },
-    "rules": {
-      "prettier/prettier": "error"
-    },
-    "plugins": [
-      "prettier"
-    ]
   },
   "scripts": {
     "pretest": "eslint .",

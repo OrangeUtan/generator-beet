@@ -2275,6 +2275,13 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
+generator-license@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/generator-license/-/generator-license-5.4.0.tgz#9d662e98d2bd534036079461521036977becb7a0"
+  integrity sha512-Nd1V/Pt8kL3DnAiw370F2AWaibSz4+TnR/2j3jAFpdKEsvOeZSkFtIakWSMcGq3+iMAfyHRI7tTFP8QSvedHVQ==
+  dependencies:
+    yeoman-generator "^2.0.1"
+
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
@@ -6014,7 +6021,7 @@ yeoman-environment@^2.0.5, yeoman-environment@^2.3.0, yeoman-environment@^2.9.5:
     untildify "^3.0.3"
     yeoman-generator "^4.8.2"
 
-yeoman-generator@^2.0.5:
+yeoman-generator@^2.0.1, yeoman-generator@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/yeoman-generator/-/yeoman-generator-2.0.5.tgz#57b0b3474701293cc9ec965288f3400b00887c81"
   integrity sha512-rV6tJ8oYzm4mmdF2T3wjY+Q42jKF2YiiD0VKfJ8/0ZYwmhCKC9Xs2346HVLPj/xE13i68psnFJv7iS6gWRkeAg==

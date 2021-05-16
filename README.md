@@ -1,5 +1,5 @@
 # generator-beet [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> Generate a beet project
+> Yeoman generator for creating [Beet](https://github.com/mcbeet/beet) projects
 
 ## Installation
 

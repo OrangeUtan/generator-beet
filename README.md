@@ -10,7 +10,9 @@ npm install -g yo
 npm install -g generator-beet
 ```
 
-Then generate your new project:
+The generator uses Poetry to create a Python project in a virtual environment. This is needed for beet, writing custom beet plugins and automatic github releases: [Install Poetry](https://python-poetry.org/docs/#installation)
+
+Finally, generate your new project:
 
 ```bash
 yo beet

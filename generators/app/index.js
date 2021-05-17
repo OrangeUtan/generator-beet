@@ -55,6 +55,7 @@ module.exports = class extends Generator {
         }
 
         // License prompts
+        this.log(chalk.white("Creating Lincense"));
         this.composeWith(require.resolve("generator-license"), {
             name: this.answers.author,
             email: this.answers.email,
@@ -70,7 +71,7 @@ module.exports = class extends Generator {
     }
 
     async _promptGenerateDatapack() {
-        this.answers.generateDatapack = await this.prompt([
+        const { generateDatapack } = await this.prompt([
             {
                 type: "confirm",
                 name: "generateDatapack",
@@ -78,7 +79,8 @@ module.exports = class extends Generator {
                 default: true
             }
         ]);
-        if (this.answers.generateDatapack) {
+        this.answers.generateDatapack = generateDatapack;
+        if (generateDatapack) {
             const { rootNamespace, datapackNamespace } = await this.prompt([
                 {
                     type: "input",
@@ -89,7 +91,7 @@ module.exports = class extends Generator {
                 {
                     type: "input",
                     name: "datapackNamespace",
-                    message: "Sub-Namespace of the datapack",
+                    message: "Namespace of the datapack",
                     default: this.answers.name.toLowerCase()
                 }
             ]);

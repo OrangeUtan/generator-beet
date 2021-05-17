@@ -114,17 +114,9 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        // Create beet configuration file
-        this.fs.copyTpl(this.templatePath("beet.json"), this.destinationPath("beet.json"), {
+        this.fs.copyTpl(this.templatePath("*.*"), this.destinationPath(), {
             ...this.answers
         });
-
-        // Create beet release configuration file
-        this.fs.copyTpl(
-            this.templatePath("beet-release.json"),
-            this.destinationPath("beet-release.json"),
-            { ...this.answers }
-        );
 
         // Generate resourepack
         if (this.answers.generateResourcepack) {

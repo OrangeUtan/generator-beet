@@ -33,9 +33,13 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        this.fs.copyTpl(this.templatePath(), this.destinationPath(), {
-            ...this.options
-        });
+        this.fs.copyTpl(
+            [this.templatePath(), this.templatePath(".github")],
+            this.destinationPath(),
+            {
+                ...this.options
+            }
+        );
     }
 
     install() {

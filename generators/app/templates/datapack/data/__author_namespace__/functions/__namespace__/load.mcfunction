@@ -1,1 +1,1 @@
-# Initialises the datapack
+# Executed once when Minecraft loads/reloads the datapack

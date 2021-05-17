@@ -1,1 +1,1 @@
-{"values":["<%= rootNamespace %>:<%= datapackNamespace %>/load"]}
+{"values":["<%= authorNamespace %>:<%= datapackNamespace %>/load"]}

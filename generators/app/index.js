@@ -81,11 +81,11 @@ module.exports = class extends Generator {
         ]);
         this.answers.generateDatapack = generateDatapack;
         if (generateDatapack) {
-            const { rootNamespace, datapackNamespace } = await this.prompt([
+            const { authorNamespace, datapackNamespace } = await this.prompt([
                 {
                     type: "input",
-                    name: "rootNamespace",
-                    message: "Root namespace of the datapack",
+                    name: "authorNamespace",
+                    message: "Root namespace for all of your datapacks",
                     default: this.answers.author.toLowerCase()
                 },
                 {
@@ -95,12 +95,12 @@ module.exports = class extends Generator {
                     default: this.answers.name.toLowerCase()
                 }
             ]);
-            this.answers.rootNamespace = rootNamespace;
+            this.answers.authorNamespace = authorNamespace;
             this.answers.datapackNamespace = datapackNamespace;
 
             this.log(
                 chalk.green(
-                    `Creating datapack with namespace: '${rootNamespace}:${datapackNamespace}'`
+                    `Creating datapack with namespace: '${authorNamespace}:${datapackNamespace}'`
                 )
             );
         }
@@ -138,24 +138,26 @@ module.exports = class extends Generator {
 
         // Generate datapack
         if (this.answers.generateDatapack) {
-            // Copy function tags
-            this.fs.copyTpl(
-                this.templatePath("datapack/data/minecraft"),
-                this.destinationPath("datapack/data/minecraft"),
-                { ...this.answers }
-            );
-
-            // Copy functions templates
-            this.fs.copyTpl(
-                this.templatePath(
-                    "datapack/data/__root_namespace__/functions/__sub_namespace__"
-                ),
-                this.destinationPath(
-                    `datapack/data/${this.answers.rootNamespace}/functions/${this.answers.datapackNamespace}`
-                ),
-                { ...this.answers }
-            );
+            this._writeDatapack();
         }
+    }
+
+    _writeDatapack() {
+        // Copy minecraft namespace
+        this.fs.copyTpl(
+            this.templatePath("datapack/data/minecraft"),
+            this.destinationPath("datapack/data/minecraft"),
+            { ...this.answers }
+        );
+
+        // Copy __author_namespace__ namespace
+        this.fs.copyTpl(
+            this.templatePath("datapack/data/__author_namespace__/functions/__namespace__"),
+            this.destinationPath(
+                `datapack/data/${this.answers.authorNamespace}/functions/${this.answers.datapackNamespace}`
+            ),
+            { ...this.answers }
+        );
     }
 
     install() {

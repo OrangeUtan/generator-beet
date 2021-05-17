@@ -41,7 +41,12 @@ module.exports = class extends Generator {
         ]);
         this.answers.version = "0.0.0";
 
-        await this._promptGenerateDatapack();
+        await this._promptGenerateDatapack(
+            this.answers.name,
+            this.answers.version,
+            this.answers.description,
+            this.answers.author
+        );
 
         if (this.answers.generateResourcepack || this.answers.generateDatapack) {
             const { packFormat } = await this.prompt([
@@ -56,7 +61,6 @@ module.exports = class extends Generator {
         }
 
         // License prompts
-        this.log(chalk.white("Creating Lincense"));
         this.composeWith(require.resolve("generator-license"), {
             name: this.answers.author,
             email: this.answers.email,
@@ -71,7 +75,16 @@ module.exports = class extends Generator {
         );
     }
 
-    async _promptGenerateDatapack() {
+    async _promptGeneratePoetryProject(name, version, description, author) {
+        this.composeWith(require.resolve("../poetry/index"), {
+            name,
+            version,
+            description,
+            author
+        });
+    }
+
+    async _promptGenerateDatapack(name, version, description, author) {
         const { generateDatapack } = await this.prompt([
             {
                 type: "confirm",
@@ -81,39 +94,19 @@ module.exports = class extends Generator {
             }
         ]);
         this.answers.generateDatapack = generateDatapack;
-        if (generateDatapack) {
-            const { authorNamespace, datapackNamespace } = await this.prompt([
-                {
-                    type: "input",
-                    name: "authorNamespace",
-                    message: "Root namespace for all of your datapacks",
-                    default: this.answers.author.toLowerCase()
-                },
-                {
-                    type: "input",
-                    name: "datapackNamespace",
-                    message: "Namespace of the datapack",
-                    default: this.answers.name.toLowerCase()
-                }
-            ]);
-            this.answers.authorNamespace = authorNamespace;
-            this.answers.datapackNamespace = datapackNamespace;
 
-            this.log(
-                chalk.green(
-                    `Creating datapack with namespace: '${authorNamespace}:${datapackNamespace}'`
-                )
+        if (this.answers.generateDatapack) {
+            this.composeWith(
+                require.resolve("../datapack/index"),
+                {
+                    name,
+                    version,
+                    description,
+                    author
+                },
+                true
             );
         }
-    }
-
-    async _promptGeneratePoetryProject(name, version, description, author) {
-        this.composeWith(require.resolve("../poetry/index"), {
-            name,
-            version,
-            description,
-            author
-        });
     }
 
     writing() {
@@ -136,50 +129,6 @@ module.exports = class extends Generator {
                 this.destinationPath("resourcepack")
             );
         }
-
-        // Generate datapack
-        if (this.answers.generateDatapack) {
-            this._writeDatapack();
-        }
-    }
-
-    _writeDatapack() {
-        // Copy minecraft namespace
-        this.fs.copyTpl(
-            this.templatePath("datapack/data/minecraft"),
-            this.destinationPath("datapack/data/minecraft"),
-            { ...this.answers }
-        );
-
-        // Copy global namespace
-        this.fs.copyTpl(
-            this.templatePath("datapack/data/global/advancements/root.json"),
-            this.destinationPath("datapack/data/global/advancements/root.json"),
-            { ...this.answers }
-        );
-        this.fs.copyTpl(
-            this.templatePath("datapack/data/global/advancements/__author_namespace__.json"),
-            this.destinationPath(
-                `datapack/data/global/advancements/${this.answers.authorNamespace}.json`
-            ),
-            { ...this.answers }
-        );
-
-        // Copy __author_namespace__ namespace
-        this.fs.copyTpl(
-            this.templatePath("datapack/data/__author_namespace__/functions/__namespace__"),
-            this.destinationPath(
-                `datapack/data/${this.answers.authorNamespace}/functions/${this.answers.datapackNamespace}`
-            ),
-            { ...this.answers }
-        );
-        this.fs.copyTpl(
-            this.templatePath("datapack/data/__author_namespace__/advancements/__namespace__"),
-            this.destinationPath(
-                `datapack/data/${this.answers.authorNamespace}/advancements/${this.answers.datapackNamespace}`
-            ),
-            { ...this.answers }
-        );
     }
 
     install() {

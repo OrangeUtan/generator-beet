@@ -150,6 +150,20 @@ module.exports = class extends Generator {
             { ...this.answers }
         );
 
+        // Copy global namespace
+        this.fs.copyTpl(
+            this.templatePath("datapack/data/global/advancements/root.json"),
+            this.destinationPath("datapack/data/global/advancements/root.json"),
+            { ...this.answers }
+        );
+        this.fs.copyTpl(
+            this.templatePath("datapack/data/global/advancements/__author_namespace__.json"),
+            this.destinationPath(
+                `datapack/data/global/advancements/${this.answers.author}.json`
+            ),
+            { ...this.answers }
+        );
+
         // Copy __author_namespace__ namespace
         this.fs.copyTpl(
             this.templatePath("datapack/data/__author_namespace__/functions/__namespace__"),

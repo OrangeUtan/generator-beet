@@ -39,6 +39,7 @@ module.exports = class extends Generator {
                 default: true
             }
         ]);
+        this.answers.version = "0.0.0";
 
         await this._promptGenerateDatapack();
 
@@ -64,7 +65,7 @@ module.exports = class extends Generator {
 
         await this._promptGeneratePoetryProject(
             this.answers.name,
-            "0.0.0",
+            this.answers.version,
             this.answers.description,
             this.answers.author
         );
@@ -159,7 +160,7 @@ module.exports = class extends Generator {
         this.fs.copyTpl(
             this.templatePath("datapack/data/global/advancements/__author_namespace__.json"),
             this.destinationPath(
-                `datapack/data/global/advancements/${this.answers.author}.json`
+                `datapack/data/global/advancements/${this.answers.authorNamespace}.json`
             ),
             { ...this.answers }
         );
@@ -169,6 +170,13 @@ module.exports = class extends Generator {
             this.templatePath("datapack/data/__author_namespace__/functions/__namespace__"),
             this.destinationPath(
                 `datapack/data/${this.answers.authorNamespace}/functions/${this.answers.datapackNamespace}`
+            ),
+            { ...this.answers }
+        );
+        this.fs.copyTpl(
+            this.templatePath("datapack/data/__author_namespace__/advancements/__namespace__"),
+            this.destinationPath(
+                `datapack/data/${this.answers.authorNamespace}/advancements/${this.answers.datapackNamespace}`
             ),
             { ...this.answers }
         );

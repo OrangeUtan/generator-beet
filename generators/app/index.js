@@ -114,9 +114,13 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        this.fs.copyTpl(this.templatePath("*.*"), this.destinationPath(), {
-            ...this.answers
-        });
+        this.fs.copyTpl(
+            [this.templatePath("*.*"), this.templatePath(".*")],
+            this.destinationPath(),
+            {
+                ...this.answers
+            }
+        );
 
         // Generate resourepack
         if (this.answers.generateResourcepack) {

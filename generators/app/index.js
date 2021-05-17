@@ -40,8 +40,37 @@ module.exports = class extends Generator {
             }
         ]);
 
-        // Datapack prompts
-        const { generateDatapack } = await this.prompt([
+        await this._promptGenerateDatapack();
+
+        if (this.answers.generateResourcepack || this.answers.generateDatapack) {
+            const { packFormat } = await this.prompt([
+                {
+                    type: "input",
+                    name: "packFormat",
+                    message: "Pack format",
+                    default: defaultPackFormat
+                }
+            ]);
+            this.answers.packFormat = packFormat;
+        }
+
+        // License prompts
+        this.composeWith(require.resolve("generator-license"), {
+            name: this.answers.author,
+            email: this.answers.email,
+            defaultLicense: "MIT"
+        });
+
+        await this._promptGeneratePoetryProject(
+            this.answers.name,
+            "0.0.0",
+            this.answers.description,
+            this.answers.author
+        );
+    }
+
+    async _promptGenerateDatapack() {
+        this.answers.generateDatapack = await this.prompt([
             {
                 type: "confirm",
                 name: "generateDatapack",
@@ -49,8 +78,7 @@ module.exports = class extends Generator {
                 default: true
             }
         ]);
-        this.answers.generateDatapack = generateDatapack;
-        if (generateDatapack) {
+        if (this.answers.generateDatapack) {
             const { rootNamespace, datapackNamespace } = await this.prompt([
                 {
                     type: "input",
@@ -74,24 +102,14 @@ module.exports = class extends Generator {
                 )
             );
         }
+    }
 
-        if (this.answers.generateResourcepack || generateDatapack) {
-            const { packFormat } = await this.prompt([
-                {
-                    type: "input",
-                    name: "packFormat",
-                    message: "Pack format",
-                    default: defaultPackFormat
-                }
-            ]);
-            this.answers.packFormat = packFormat;
-        }
-
-        // License prompts
-        this.composeWith(require.resolve("generator-license"), {
-            name: this.answers.author,
-            email: this.answers.email,
-            defaultLicense: "MIT"
+    async _promptGeneratePoetryProject(name, version, description, author) {
+        this.composeWith(require.resolve("../poetry/index"), {
+            name,
+            version,
+            description,
+            author
         });
     }
 
@@ -140,6 +158,11 @@ module.exports = class extends Generator {
                 { ...this.answers }
             );
         }
+    }
+
+    install() {
+        this.log(chalk.green("Initializing git repository"));
+        this.spawnCommandSync("git init");
     }
 
     end() {

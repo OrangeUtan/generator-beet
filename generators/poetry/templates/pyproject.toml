@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "<%= name %>"
+version = "<%= version %>"
+description = "<%= description %>"
+authors = ["<%= author %>"]
+
+[tool.poetry.dependencies]
+beet = "^0.24.1"
+python = "^3.9"
+pre-commit = "^2.10.1"
+black = "^20.8b1"
+isort = "^5.7.0"
+invoke = "^1.5.0"
+python-semantic-release = "^7.15.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 95
+
+[tool.isort]
+profile = "black"
+line_length = 95
+
+[tool.semantic_release]
+branch="release"
+version_toml = "pyproject.toml:tool.poetry.version"
+version_pattern = "beet-release.json:(\\d+\\.\\d+\\.\\d+)"
+major_on_zero = false
+build_command = "beet -c beet-release.json build"
+dist_path = "dist"
+upload_to_pypi = false
+upload_to_release = true

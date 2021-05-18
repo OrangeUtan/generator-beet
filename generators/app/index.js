@@ -163,6 +163,10 @@ module.exports = class extends Generator {
             this.composeWith(require.resolve("../datapack/index"), { ...this.props });
         }
 
+        if (this.props.resourcepack) {
+            this.composeWith(require.resolve("../resourcepack/index"), { ...this.props });
+        }
+
         if (this.props.license) {
             this.composeWith(require.resolve("generator-license"), {
                 name: this.props.author,
@@ -182,26 +186,6 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        this.fs.copyTpl(
-            [this.templatePath("*.*"), this.templatePath(".*")],
-            this.destinationPath(),
-            { ...this.props }
-        );
-
-        // Generate resourepack
-        if (this.props.datapack) {
-            this.fs.copy(
-                this.templatePath("resourcepack"),
-                this.destinationPath("resourcepack")
-            );
-            this.fs.copy(
-                this.templatePath("resourcepack/**/.*"),
-                this.destinationPath("resourcepack")
-            );
-        }
-    }
-
-    end() {
-        this.fs.delete(this.destinationPath("**/__empty_dir_placeholder__"));
+        this.fs.copyTpl(this.templatePath(), this.destinationPath(), { ...this.props });
     }
 };

@@ -1,20 +1,62 @@
 "use strict";
 
-const { default: chalk } = require("chalk");
 const Generator = require("yeoman-generator");
 
-const defaultPackFormat = 7;
-
 module.exports = class extends Generator {
+    constructor(args, options) {
+        super(args, options);
+
+        this.argument("name", {
+            type: String,
+            required: false
+        });
+
+        this.option("datapack", {
+            type: Boolean,
+            require: false,
+            description: "Generate datapack boilerplate"
+        });
+
+        this.option("resourcepack", {
+            type: Boolean,
+            require: false,
+            description: "Generate resourcepack boilerplate"
+        });
+
+        this.option("license", {
+            type: Boolean,
+            require: false,
+            description: "Include a license"
+        });
+
+        this.option("git", {
+            type: Boolean,
+            require: false,
+            description: "Initialize git repository"
+        });
+
+        this.option("python", {
+            type: Boolean,
+            require: false,
+            description: "Create a Python project"
+        });
+
+        this.props = {
+            name: this.options.name,
+            datapack: this.options.datapack,
+            resourcepack: this.options.resourcepack,
+            license: this.options.license,
+            git: this.options.git,
+            python: this.options.python
+        };
+    }
+
     async prompting() {
-        // General prompts
-        this.answers = await this.prompt([
-            {
-                type: "input",
-                name: "name",
-                message: "Your project name",
-                default: this.appname
-            },
+        await this._promptArgs();
+
+        this.props.githubUsername = await this._fetchGithubUsername();
+        this.props.packFormat = 7;
+        await this._promptAndUpdateProps([
             {
                 type: "input",
                 name: "description",
@@ -22,90 +64,116 @@ module.exports = class extends Generator {
             },
             {
                 type: "input",
+                name: "version",
+                message: "Version",
+                default: "0.0.0"
+            },
+            {
+                type: "input",
                 name: "author",
-                message: "Your name",
+                message: "Author",
                 default: this.user.git.name()
             },
             {
                 type: "input",
                 name: "email",
-                message: "Your email (optional)",
+                message: "Author Email",
                 default: this.user.git.email()
             },
             {
-                type: "confirm",
-                name: "generateResourcepack",
-                message: "Generate resourcepack?",
-                default: true
+                type: "input",
+                name: "authorWebsite",
+                message: "Author Website",
+                default: this.props.githubUsername
+                    ? `https://github.com/${this.props.githubUsername}`
+                    : ""
             }
         ]);
-        this.answers.version = "0.0.0";
 
-        await this._promptGenerateDatapack(
-            this.answers.name,
-            this.answers.version,
-            this.answers.description,
-            this.answers.author
-        );
+        await this._promptOptions();
+    }
 
-        if (this.answers.generateResourcepack || this.answers.generateDatapack) {
-            const { packFormat } = await this.prompt([
-                {
-                    type: "input",
-                    name: "packFormat",
-                    message: "Pack format",
-                    default: defaultPackFormat
-                }
-            ]);
-            this.answers.packFormat = packFormat;
+    async _fetchGithubUsername() {
+        try {
+            return await this.user.github.username();
+        } catch {
+            return "";
         }
-
-        // License prompts
-        this.composeWith(require.resolve("generator-license"), {
-            name: this.answers.author,
-            email: this.answers.email,
-            defaultLicense: "MIT"
-        });
-
-        await this._promptGeneratePoetryProject(
-            this.answers.name,
-            this.answers.version,
-            this.answers.description,
-            this.answers.author
-        );
     }
 
-    async _promptGeneratePoetryProject(name, version, description, author) {
-        this.composeWith(require.resolve("../poetry/index"), {
-            name,
-            version,
-            description,
-            author
-        });
+    async _promptAndUpdateProps(prompts) {
+        this.props = Object.assign({}, this.props, await this.prompt(prompts));
     }
 
-    async _promptGenerateDatapack(name, version, description, author) {
-        const { generateDatapack } = await this.prompt([
+    async _promptArgs() {
+        await this._promptAndUpdateProps([
+            {
+                type: "input",
+                name: "name",
+                message: "Project name",
+                default: this.appname,
+                when: this.options.name === undefined,
+                validate: (input, _) => (input === "" ? "Project name cannot be empty" : true)
+            }
+        ]);
+    }
+
+    async _promptOptions() {
+        await this._promptAndUpdateProps([
             {
                 type: "confirm",
-                name: "generateDatapack",
-                message: "Generate datapack?",
-                default: true
+                name: "datapack",
+                message: "Generate datapack boilerplate?",
+                default: true,
+                when: this.options.datapack === undefined
+            },
+            {
+                type: "confirm",
+                name: "resourcepack",
+                message: "Generate resourcepack boilerplate?",
+                default: true,
+                when: this.options.resourcepack === undefined
+            },
+            {
+                type: "confirm",
+                name: "license",
+                message: "Include a license?",
+                default: true,
+                when: this.options.license === undefined
+            },
+            {
+                type: "confirm",
+                name: "git",
+                message: "Initialize git repository?",
+                default: true,
+                when: this.options.git === undefined
+            },
+            {
+                type: "confirm",
+                name: "python",
+                message: "Create a Python project? (recommended)",
+                default: true,
+                when: this.options.python === undefined
             }
         ]);
-        this.answers.generateDatapack = generateDatapack;
+    }
 
-        if (this.answers.generateDatapack) {
-            this.composeWith(
-                require.resolve("../datapack/index"),
-                {
-                    name,
-                    version,
-                    description,
-                    author
-                },
-                true
-            );
+    default() {
+        if (this.props.datapack) {
+            this.composeWith(require.resolve("../datapack/index"), { ...this.props });
+        }
+
+        if (this.props.license) {
+            this.composeWith(require.resolve("generator-license"), {
+                name: this.props.author,
+                email: this.props.email,
+                website: this.props.authorWebsite,
+                defaultLicense: "MIT"
+            });
+        }
+
+        if (this.props.python) {
+            this.composeWith(require.resolve("../poetry/index"), { ...this.props });
         }
     }
 
@@ -113,13 +181,11 @@ module.exports = class extends Generator {
         this.fs.copyTpl(
             [this.templatePath("*.*"), this.templatePath(".*")],
             this.destinationPath(),
-            {
-                ...this.answers
-            }
+            { ...this.props }
         );
 
         // Generate resourepack
-        if (this.answers.generateResourcepack) {
+        if (this.props.datapack) {
             this.fs.copy(
                 this.templatePath("resourcepack"),
                 this.destinationPath("resourcepack")
@@ -132,7 +198,6 @@ module.exports = class extends Generator {
     }
 
     install() {
-        this.log(chalk.green("Initializing git repository"));
         this.spawnCommandSync("git init");
     }
 

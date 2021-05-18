@@ -2,13 +2,13 @@
     "name": "<%= name %>",
     "author": "<%= author %>",
     "description": "<%= description %>",
-    <%_ if (generateResourcepack) { -%>
+    <%_ if (resourcepack) { -%>
     "resource_pack": {
         "load": ["resourcepack"],
         "pack_format": <%= packFormat %>
     },
     <%_ } -%>
-    <%_ if (generateDatapack) { -%>
+    <%_ if (datapack) { -%>
     "data_pack": {
         "load": ["datapack"],
         "pack_format": <%= packFormat %>

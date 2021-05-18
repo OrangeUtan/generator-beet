@@ -6,6 +6,7 @@
 ## Table of Contents
 - [Features](#Features)
     - [Datapack boilerplate](#Datapack-boilerplate)
+    - [Datapack Advancement](#Datapack-Advancement)
     - Resourcepack boilerplate
     - Build releases using Github Actions
     - Generated Changelog
@@ -28,9 +29,27 @@ datapack
         ├╴tick.mcfunction # Called once every tick
         └╴load.mcfunction # Called after datapack is (re)loaded
 ```
-
 To prevent naming conflicts between datapacks, all your functions, advancements, etc are located in the unique namespace `<authorNamespace>:<projectNamespace>`.<br>
 E.g. if the author is `Oran9eUtan` and the project name is `Teleporter`, the `load` function can be called like this: `function oran9eutan:teleporter/load`
+
+## Datapack Advancement
+Datapack advancements give users an easy way to see all installed datapacks and their authors.
+
+![](images/demo_datapack_advancement.gif)
+
+```bash
+datapack
+└╴data
+  ├╴global
+  │ └╴advancements
+  │   ├╴root.json              # 1. Root advancement
+  │   └╴<authorNamespace>.json # 2. Author advancement
+  └╴<authorNamspace>
+    └╴advancements
+      └╴<projectNamespace>
+          └╴installed.json     # 3. Datapack advancement
+```
+[More Information](https://mc-datapacks.github.io/en/conventions/datapack_advancement.html)
 
 ## Getting started
 
@@ -62,8 +81,8 @@ yo beet
 ```bash
 # Generate new beet project
 yo beet [project-name]
-    --datapack       # Generate datapack boilerplate
-    --resourcepack   # Generate resourcepack boilerplate
+    --datapack       # Generate datapack
+    --resourcepack   # Generate resourcepack
     --license        # Include a license
     --git            # Initialize git repository
     --python         # Create a Python project

@@ -14,13 +14,13 @@ module.exports = class extends Generator {
         this.option("datapack", {
             type: Boolean,
             require: false,
-            description: "Generate datapack boilerplate"
+            description: "Generate datapack"
         });
 
         this.option("resourcepack", {
             type: Boolean,
             require: false,
-            description: "Generate resourcepack boilerplate"
+            description: "Generate resourcepack"
         });
 
         this.option("license", {
@@ -123,14 +123,14 @@ module.exports = class extends Generator {
             {
                 type: "confirm",
                 name: "datapack",
-                message: "Generate datapack boilerplate?",
+                message: "Generate datapack?",
                 default: true,
                 when: this.options.datapack === undefined
             },
             {
                 type: "confirm",
                 name: "resourcepack",
-                message: "Generate resourcepack boilerplate?",
+                message: "Generate resourcepack?",
                 default: true,
                 when: this.options.resourcepack === undefined
             },

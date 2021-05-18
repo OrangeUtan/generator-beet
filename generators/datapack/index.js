@@ -53,6 +53,12 @@ module.exports = class extends Generator {
                 name: "datapackNamespace",
                 message: "Namespace of the datapack",
                 default: this.props.name?.toLowerCase() ?? ""
+            },
+            {
+                type: "confirm",
+                name: "datapackAdvancement",
+                message: "Include datapack advancement?",
+                default: true
             }
         ]);
     }
@@ -94,28 +100,18 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        // Copy minecraft namespace
+        if (this.props.datapackAdvancement) {
+            this._writeDatapackAdvancement();
+        }
+
+        // Minecraft namespace
         this.fs.copyTpl(
             this.templatePath("data/minecraft"),
             this.destinationPath("datapack/data/minecraft"),
             { ...this.props }
         );
 
-        // Copy global namespace
-        this.fs.copyTpl(
-            this.templatePath("data/global/advancements/root.json"),
-            this.destinationPath("datapack/data/global/advancements/root.json"),
-            { ...this.props }
-        );
-        this.fs.copyTpl(
-            this.templatePath("data/global/advancements/__author_namespace__.json"),
-            this.destinationPath(
-                `datapack/data/global/advancements/${this.props.authorNamespace}.json`
-            ),
-            { ...this.props }
-        );
-
-        // Copy __author_namespace__ namespace
+        // Author namespace
         this.fs.copyTpl(
             this.templatePath("data/__author_namespace__/functions/__namespace__"),
             this.destinationPath(
@@ -123,10 +119,30 @@ module.exports = class extends Generator {
             ),
             { ...this.props }
         );
+    }
+
+    _writeDatapackAdvancement() {
+        // Root advancment
         this.fs.copyTpl(
-            this.templatePath("data/__author_namespace__/advancements/__namespace__"),
+            this.templatePath("data/global/advancements/root.json"),
+            this.destinationPath("datapack/data/global/advancements/root.json"),
+            { ...this.props }
+        );
+        // Author namespace advancement
+        this.fs.copyTpl(
+            this.templatePath("data/global/advancements/__author_namespace__.json"),
             this.destinationPath(
-                `datapack/data/${this.props.authorNamespace}/advancements/${this.props.datapackNamespace}`
+                `datapack/data/global/advancements/${this.props.authorNamespace}.json`
+            ),
+            { ...this.props }
+        );
+        // Datapack namespace advancement
+        this.fs.copyTpl(
+            this.templatePath(
+                "data/__author_namespace__/advancements/__namespace__/installed.json"
+            ),
+            this.destinationPath(
+                `datapack/data/${this.props.authorNamespace}/advancements/${this.props.datapackNamespace}/installed.json`
             ),
             { ...this.props }
         );

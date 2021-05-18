@@ -172,6 +172,10 @@ module.exports = class extends Generator {
             });
         }
 
+        if (this.props.git) {
+            this.composeWith(require.resolve("../git/index"), { ...this.props });
+        }
+
         if (this.props.python) {
             this.composeWith(require.resolve("../poetry/index"), { ...this.props });
         }
@@ -195,10 +199,6 @@ module.exports = class extends Generator {
                 this.destinationPath("resourcepack")
             );
         }
-    }
-
-    install() {
-        this.spawnCommandSync("git init");
     }
 
     end() {

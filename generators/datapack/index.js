@@ -1,5 +1,4 @@
 "use strict";
-const { default: chalk } = require("chalk");
 const Generator = require("yeoman-generator");
 
 module.exports = class extends Generator {
@@ -12,16 +11,16 @@ module.exports = class extends Generator {
             require: true
         });
 
+        this.option("description", {
+            type: String,
+            description: "Description",
+            require: true
+        });
+
         this.option("version", {
             type: String,
             description: "Version",
             default: "0.0.0",
-            require: true
-        });
-
-        this.option("description", {
-            type: String,
-            description: "Description",
             require: true
         });
 
@@ -30,29 +29,68 @@ module.exports = class extends Generator {
             description: "Author",
             require: true
         });
+
+        this.props = {
+            name: this.options.name,
+            description: this.options.description,
+            version: this.options.version,
+            author: this.options.author
+        };
     }
 
     async prompting() {
-        this.answers = await this.prompt([
+        await this._promptOptions();
+
+        await this._promptAndUpdateProps([
             {
                 type: "input",
                 name: "authorNamespace",
                 message: "Root namespace for all of your datapacks",
-                default: this.options.author.toLowerCase()
+                default: this.props.author?.toLowerCase() ?? ""
             },
             {
                 type: "input",
                 name: "datapackNamespace",
                 message: "Namespace of the datapack",
-                default: this.options.name.toLowerCase()
+                default: this.props.name?.toLowerCase() ?? ""
             }
         ]);
+    }
 
-        this.log(
-            chalk.green(
-                `Creating datapack with namespace: '${this.answers.authorNamespace}:${this.answers.datapackNamespace}'`
-            )
-        );
+    async _promptAndUpdateProps(prompts) {
+        this.props = Object.assign({}, this.props, await this.prompt(prompts));
+    }
+
+    async _promptOptions() {
+        await this._promptAndUpdateProps([
+            {
+                type: "input",
+                name: "name",
+                message: "Project name",
+                default: this.appname,
+                when: this.props.name === undefined
+            },
+            {
+                type: "input",
+                name: "description",
+                message: "Description",
+                when: this.props.description === undefined
+            },
+            {
+                type: "input",
+                name: "version",
+                message: "Version",
+                default: "0.0.0",
+                when: this.props.version === undefined
+            },
+            {
+                type: "input",
+                name: "author",
+                message: "Author",
+                default: this.user.git.name(),
+                when: this.props.author === undefined
+            }
+        ]);
     }
 
     writing() {
@@ -60,37 +98,37 @@ module.exports = class extends Generator {
         this.fs.copyTpl(
             this.templatePath("data/minecraft"),
             this.destinationPath("datapack/data/minecraft"),
-            { ...this.answers, ...this.options }
+            { ...this.props }
         );
 
         // Copy global namespace
         this.fs.copyTpl(
             this.templatePath("data/global/advancements/root.json"),
             this.destinationPath("datapack/data/global/advancements/root.json"),
-            { ...this.answers, ...this.options }
+            { ...this.props }
         );
         this.fs.copyTpl(
             this.templatePath("data/global/advancements/__author_namespace__.json"),
             this.destinationPath(
-                `datapack/data/global/advancements/${this.answers.authorNamespace}.json`
+                `datapack/data/global/advancements/${this.props.authorNamespace}.json`
             ),
-            { ...this.answers, ...this.options }
+            { ...this.props }
         );
 
         // Copy __author_namespace__ namespace
         this.fs.copyTpl(
             this.templatePath("data/__author_namespace__/functions/__namespace__"),
             this.destinationPath(
-                `datapack/data/${this.answers.authorNamespace}/functions/${this.answers.datapackNamespace}`
+                `datapack/data/${this.props.authorNamespace}/functions/${this.props.datapackNamespace}`
             ),
-            { ...this.answers, ...this.options }
+            { ...this.props }
         );
         this.fs.copyTpl(
             this.templatePath("data/__author_namespace__/advancements/__namespace__"),
             this.destinationPath(
-                `datapack/data/${this.answers.authorNamespace}/advancements/${this.answers.datapackNamespace}`
+                `datapack/data/${this.props.authorNamespace}/advancements/${this.props.datapackNamespace}`
             ),
-            { ...this.answers, ...this.options }
+            { ...this.props }
         );
     }
 };

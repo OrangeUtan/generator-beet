@@ -1,12 +1,10 @@
 extends: ["xo", "prettier"]
-env: {
-  jest: true,
+env:
+  jest: true
   node: true
-}
-rules: {
+rules:
   prettier/prettier: warn,
   camelcase: 0
-}
 plugins: ["prettier"]
 ignorePatterns:
   - "coverage"

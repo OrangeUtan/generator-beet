@@ -1,1 +1,1 @@
-{"values":["<%= authorNamespace %>:<%= datapackNamespace %>/tick"]}
+{ "values": ["<%= authorNamespace %>:<%= datapackNamespace %>/tick"] }

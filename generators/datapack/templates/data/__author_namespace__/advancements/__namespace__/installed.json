@@ -1,14 +1,17 @@
 {
-    "display": {
-        "title": [{"text":"<%= name %>"}, {"text": " v<%= version %>", "color":"yellow"}],
-        "description": "<%= description %>",
-        "announce_to_chat": false,
-        "show_toast": false
-    },
-    "parent": "global:<% authorNamespace %>",
-    "criteria": {
-        "trigger": {
-            "trigger": "minecraft:tick"
-        }
-    }
+	"display": {
+		"title": [
+			{ "text": "<%= name %>" },
+			{ "text": " v<%= version %>", "color": "yellow" }
+		],
+		"description": "<%= description %>",
+		"announce_to_chat": false,
+		"show_toast": false
+	},
+	"parent": "global:<% authorNamespace %>",
+	"criteria": {
+		"trigger": {
+			"trigger": "minecraft:tick"
+		}
+	}
 }

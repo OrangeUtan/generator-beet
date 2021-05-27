@@ -94,16 +94,20 @@ npm install -g yo generator-beet
 ```
 
 ### Install Poetry
-It's recommended to create a Python project for each of your projects:
-- Ensures you have beet correctl installed
+It's recommended to create a Python project:
+- Ensures you have beet correctly installed
 - Required for Github releases
+- Easier beet plugin development
 
-Generating Python projects requires [Poetry](https://python-poetry.org/docs/#installation):
+Generating Python projects requires [Poetry](https://python-poetry.org/docs/
+#installation):
+<br>
+OSX / Linux:
 ```bash
-# osx / linux
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-
-# windows powershell
+```
+Windows (Powershell):
+```bash
 (Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python -
 ```
 ([More on how to install Poetry](https://python-poetry.org/docs/#installation))

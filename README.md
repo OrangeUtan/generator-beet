@@ -49,7 +49,18 @@ datapack
       └╴<projectNamespace>
           └╴installed.json     # 3. Datapack advancement
 ```
-[More Information](https://mc-datapacks.github.io/en/conventions/datapack_advancement.html)
+[More info on MC Datapacks](https://mc-datapacks.github.io/en/conventions/datapack_advancement.html)
+
+### Resourcepack boilerplate
+```bash
+resourcepack
+  ├╴assets
+  │ ├╴.mcassetsroot
+  │ └╴minecraft
+  │   ├╴models
+  │   └╴textures
+  └╴pack.png
+```
 
 ## Getting started
 

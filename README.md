@@ -1,7 +1,7 @@
 # generator-beet
 [![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
-> Yeoman generator for creating [Beet](https://github.com/mcbeet/beet) projects
+> Yeoman generator for [Beet](https://github.com/mcbeet/beet) projects
 
 ## Table of Contents
 - [Features](#Features)

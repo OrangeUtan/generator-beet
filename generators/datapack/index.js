@@ -41,18 +41,20 @@ module.exports = class extends Generator {
 	async prompting() {
 		await this._promptOptions();
 
+		let defaultNamespace = "";
+		if (this.props.author && this.props.name) {
+			defaultNamespace = `${this.props.author
+				.toLowerCase()
+				.replaceAll(" ", "-")}:${this.props.name.toLowerCase().replaceAll(" ", "-")}`;
+		}
+
 		await this._promptAndUpdateProps([
 			{
 				type: "input",
-				name: "authorNamespace",
-				message: "Root namespace for all of your datapacks",
-				default: this.props.author?.toLowerCase() ?? ""
-			},
-			{
-				type: "input",
-				name: "datapackNamespace",
+				name: "namespace",
 				message: "Namespace of the datapack",
-				default: this.props.name?.toLowerCase() ?? ""
+				default: defaultNamespace,
+				validate: ns => this._validateNamespace(ns)
 			},
 			{
 				type: "confirm",
@@ -61,6 +63,23 @@ module.exports = class extends Generator {
 				default: true
 			}
 		]);
+
+		[
+			this.props.authorNamespace,
+			this.props.datapackNamespace
+		] = this.props.namespace.split(":");
+	}
+
+	_validateNamespace(ns) {
+		if (ns.split(":").length !== 2) {
+			return "Namespace must be of form: <authorNamsespace>:<projectNamespace>";
+		}
+
+		if (ns.includes(" ")) {
+			return "Namespace contains invalid characters";
+		}
+
+		return true;
 	}
 
 	async _promptAndUpdateProps(prompts) {

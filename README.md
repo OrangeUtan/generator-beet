@@ -99,8 +99,7 @@ It's recommended to create a Python project:
 - Required for Github releases
 - Easier beet plugin development
 
-Generating Python projects requires [Poetry](https://python-poetry.org/docs/
-#installation):
+Generating Python projects requires [Poetry](https://python-poetry.org/docs/#installation):
 <br>
 OSX / Linux:
 ```bash

@@ -7,8 +7,8 @@
 - [Features](#Features)
     - [Datapack boilerplate](#Datapack-boilerplate)
     - [Datapack Advancement](#Datapack-Advancement)
-    - Resourcepack boilerplate
-    - Build releases using Github Actions
+    - [Resourcepack boilerplate](#Resourcepack-boilerplate)
+    - Github Releases
     - Generated Changelog
 - [Getting started](#Getting-started)
 - [Available commands](#Available-commands)
@@ -32,8 +32,8 @@ datapack
 To prevent naming conflicts between datapacks, all your functions, advancements, etc are located in the unique namespace `<authorNamespace>:<projectNamespace>`.<br>
 E.g. if the author is `Oran9eUtan` and the project name is `Teleporter`, the `load` function can be called like this: `function oran9eutan:teleporter/load`
 
-## Datapack Advancement
-Datapack advancements give users an easy way to see all installed datapacks and their authors.
+### Datapack Advancement
+Datapack advancements give users an overview of all their installed datapacks.
 
 ![](images/demo_datapack_advancement.gif)
 
@@ -54,12 +54,12 @@ datapack
 ### Resourcepack boilerplate
 ```bash
 resourcepack
-  ├╴assets
-  │ ├╴.mcassetsroot
-  │ └╴minecraft
-  │   ├╴models
-  │   └╴textures
-  └╴pack.png
+├╴assets
+│ ├╴.mcassetsroot
+│ └╴minecraft
+│   ├╴models
+│   └╴textures
+└╴pack.png
 ```
 
 ## Getting started
@@ -67,12 +67,11 @@ resourcepack
 Install [Yeoman](http://yeoman.io) and generator-beet using [npm](https://www.npmjs.com/) (assuming you have pre-installed [node.js](https://nodejs.org/))
 
 ```bash
-npm install -g yo
-npm install -g generator-beet
+npm install -g yo generator-beet
 ```
 
 If you want to create a Python project inside your beet project (<b>recommended</b>) you will need [Poetry](https://python-poetry.org/docs/#installation):<br>
-([Poetry installation instructions](https://python-poetry.org/docs/#installation))
+([Poetry doc - Install](https://python-poetry.org/docs/#installation))
 ```bash
 # osx / linux
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -

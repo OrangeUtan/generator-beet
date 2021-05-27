@@ -61,6 +61,12 @@ module.exports = class extends Generator {
 				name: "datapackAdvancement",
 				message: "Include datapack advancement?",
 				default: true
+			},
+			{
+				type: "confirm",
+				name: "yellowShulkerBox",
+				message: "Include yellow shulker box loot table?",
+				default: false
 			}
 		]);
 
@@ -68,18 +74,6 @@ module.exports = class extends Generator {
 			this.props.authorNamespace,
 			this.props.datapackNamespace
 		] = this.props.namespace.split(":");
-	}
-
-	_validateNamespace(ns) {
-		if (ns.split(":").length !== 2) {
-			return "Namespace must be of form: <authorNamsespace>:<projectNamespace>";
-		}
-
-		if (ns.includes(" ")) {
-			return "Namespace contains invalid characters";
-		}
-
-		return true;
 	}
 
 	async _promptAndUpdateProps(prompts) {
@@ -118,17 +112,24 @@ module.exports = class extends Generator {
 		]);
 	}
 
-	writing() {
-		if (this.props.datapackAdvancement) {
-			this._writeDatapackAdvancement();
+	_validateNamespace(ns) {
+		if (ns.split(":").length !== 2) {
+			return "Namespace must be of form: <authorNamsespace>:<projectNamespace>";
 		}
 
-		// Minecraft namespace
-		this.fs.copyTpl(
-			this.templatePath("data/minecraft"),
-			this.destinationPath("datapack/data/minecraft"),
-			{ ...this.props }
-		);
+		if (ns.includes(" ")) {
+			return "Namespace contains invalid characters";
+		}
+
+		return true;
+	}
+
+	writing() {
+		if (this.props.datapackAdvancement) this._writeDatapackAdvancement();
+
+		if (this.props.yellowShulkerBox) this._writeYellowShulkerBox();
+
+		this._writeMinecraftFunctionTags();
 
 		// Author namespace
 		this.fs.copyTpl(
@@ -136,6 +137,25 @@ module.exports = class extends Generator {
 			this.destinationPath(
 				`datapack/data/${this.props.authorNamespace}/functions/${this.props.datapackNamespace}`
 			),
+			{ ...this.props }
+		);
+	}
+
+	_writeYellowShulkerBox() {
+		this.fs.copyTpl(
+			[this.templatePath("data/minecraft/loot_tables/blocks/yellow_shulker_box.json")],
+			this.destinationPath("datapack/data/minecraft/loot_tables/blocks"),
+			{ ...this.props }
+		);
+	}
+
+	_writeMinecraftFunctionTags() {
+		this.fs.copyTpl(
+			[
+				this.templatePath("data/minecraft/tags/functions/load.json"),
+				this.templatePath("data/minecraft/tags/functions/tick.json")
+			],
+			this.destinationPath("datapack/data/minecraft/tags/functions"),
 			{ ...this.props }
 		);
 	}

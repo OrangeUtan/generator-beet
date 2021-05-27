@@ -7,9 +7,9 @@
 - [Features](#Features)
     - [Datapack boilerplate](#Datapack-boilerplate)
     - [Datapack Advancement](#Datapack-Advancement)
+    - [Yellow Shulker Box](#Yellow-Shulker-Box)
     - [Resourcepack boilerplate](#Resourcepack-boilerplate)
     - [Github Releases](#Github-Releases)
-    - Generated Changelog
 - [Getting started](#Getting-started)
     - [Install generator](#Install-generator)
     - [Install Poetry](#Install-Poetry)
@@ -53,6 +53,12 @@ datapack
           └╴installed.json     # 3. Datapack advancement
 ```
 ([More on Datapack Advancements](https://mc-datapacks.github.io/en/conventions/datapack_advancement.html))
+
+### Yellow Shulker Box
+The [Shulker Box Inventory Manipulation](https://mc-datapacks.github.io/en/tips/shulker_box_inventory_manipulation.html) technique enables the manipulation of player's inventory NBT. However, as it requires rewriting the loot table of a Shulker Box, it can lead to conflicts with other datapacks. To mitigate this problem, the loot table of the Yellow Shulker Box is used as a suggested standard
+([More on Yellow Shulker Box technique](https://mc-datapacks.github.io/en/conventions/shulker_box_loot_table.html)).
+
+By enabling this option, the rewritten loot table of the Yellow Shulker Box will be included in your project.
 
 ### Resourcepack boilerplate
 ```bash

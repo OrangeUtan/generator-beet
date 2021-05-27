@@ -1,5 +1,7 @@
 # generator-beet
-[![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url]
+[![License]](https://opensource.org/licenses/MIT)
+[![NPM version]][npm-url]
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 > [Yeoman](https://yeoman.io/) generator for [Beet](https://github.com/mcbeet/beet) projects
 
@@ -143,8 +145,6 @@ yo beet:resourcepack
 
 MIT © [Oran9eUtan](https://github.com/OrangeUtan)
 
-
-[npm-image]: https://badge.fury.io/js/generator-beet.svg
+[License]: https://img.shields.io/badge/License-MIT-blue.svg
 [npm-url]: https://npmjs.org/package/generator-beet
-[daviddm-image]: https://david-dm.org/OrangeUtan/generator-beet.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/OrangeUtan/generator-beet
+[NPM version]: https://img.shields.io/npm/v/generator-beet.svg

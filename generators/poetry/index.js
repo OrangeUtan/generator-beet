@@ -67,14 +67,18 @@ module.exports = class extends Generator {
 
 	writing() {
 		this.fs.copyTpl(
-			[
-				this.templatePath("poetry.toml"),
-				this.templatePath("pyproject.toml"),
-				this.templatePath(".pre-commit-config.yaml")
-			],
+			[this.templatePath("poetry.toml"), this.templatePath("pyproject.toml")],
 			this.destinationPath(),
 			{ ...this.props }
 		);
+
+		if (this.props.git) {
+			this.fs.copyTpl(
+				[this.templatePath(".pre-commit-config.yaml")],
+				this.destinationPath(),
+				{ ...this.props }
+			);
+		}
 
 		if (this.props.githubReleases) {
 			this.fs.copyTpl([this.templatePath(".github")], this.destinationPath(".github"), {

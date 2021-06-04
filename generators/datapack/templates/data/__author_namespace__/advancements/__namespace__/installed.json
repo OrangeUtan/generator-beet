@@ -8,7 +8,7 @@
 		"announce_to_chat": false,
 		"show_toast": false
 	},
-	"parent": "global:<% authorNamespace %>",
+	"parent": "global:<%= authorNamespace %>",
 	"criteria": {
 		"trigger": {
 			"trigger": "minecraft:tick"

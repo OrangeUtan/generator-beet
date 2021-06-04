@@ -1,6 +1,6 @@
 {
     "extend": ["beet.json"],
-    "version": "0.0.0",
+    "version": "<%= version %>",
     "pipeline": ["beet.contrib.minify_json"],
     <%_ if (resourcepack) { -%>
     "resource_pack": {

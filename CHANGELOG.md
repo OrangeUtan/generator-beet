@@ -1,5 +1,12 @@
 Changelog
 
+## [1.0.2](https://github.com/OrangeUtan/generator-beet/compare/v1.0.1...v1.0.2) (2021-06-11)
+
+
+### Bug Fixes
+
+* Removed yellow shulker box ([58e970c](https://github.com/OrangeUtan/generator-beet/commit/58e970cbccd4dfbb4750f11ab0b2f9e4a70a3e6e))
+
 ## [1.0.1](https://github.com/OrangeUtan/generator-beet/compare/v1.0.0...v1.0.1) (2021-06-04)
 
 

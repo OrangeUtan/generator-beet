@@ -1,5 +1,15 @@
 Changelog
 
+## [1.0.1](https://github.com/OrangeUtan/generator-beet/compare/v1.0.0...v1.0.1) (2021-06-04)
+
+
+### Bug Fixes
+
+* Install function not executed in some cases ([c1a7e95](https://github.com/OrangeUtan/generator-beet/commit/c1a7e95ec6601a6d7622377d3244287ea6c8f696))
+* Invalid parent in datapack advancement ([845fad7](https://github.com/OrangeUtan/generator-beet/commit/845fad72a7016e0b14a5034e462b23a2398d7288))
+* Version not showing in uninstall message ([b5e00ba](https://github.com/OrangeUtan/generator-beet/commit/b5e00ba11a87121efe7e6c67744e46f1b77648bc))
+* Wrong project version in release build file ([5993a8c](https://github.com/OrangeUtan/generator-beet/commit/5993a8cd706413eb1a0522f671111061ce42ae77))
+
 # 1.0.0 (2021-05-27)
 
 

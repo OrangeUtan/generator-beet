@@ -61,12 +61,6 @@ module.exports = class extends Generator {
 				name: "datapackAdvancement",
 				message: "Include datapack advancement?",
 				default: true
-			},
-			{
-				type: "confirm",
-				name: "yellowShulkerBox",
-				message: "Include yellow shulker box loot table?",
-				default: false
 			}
 		]);
 
@@ -127,8 +121,6 @@ module.exports = class extends Generator {
 	writing() {
 		if (this.props.datapackAdvancement) this._writeDatapackAdvancement();
 
-		if (this.props.yellowShulkerBox) this._writeYellowShulkerBox();
-
 		this._writeMinecraftFunctionTags();
 
 		// Author namespace
@@ -137,14 +129,6 @@ module.exports = class extends Generator {
 			this.destinationPath(
 				`datapack/data/${this.props.authorNamespace}/functions/${this.props.datapackNamespace}`
 			),
-			{ ...this.props }
-		);
-	}
-
-	_writeYellowShulkerBox() {
-		this.fs.copyTpl(
-			[this.templatePath("data/minecraft/loot_tables/blocks/yellow_shulker_box.json")],
-			this.destinationPath("datapack/data/minecraft/loot_tables/blocks"),
 			{ ...this.props }
 		);
 	}

@@ -17,6 +17,7 @@
     - [Install Poetry](#Install-Poetry)
     - [Generate a new beet project](#Generate-a-new-beet-project)
 - [Available commands](#Available-commands)
+- [Contributing](#Contributing)
 
 ## Features
 ### Datapack boilerplate
@@ -139,6 +140,33 @@ yo beet:datapack
 
 # Only generate resourcepack
 yo beet:resourcepack
+```
+
+## Contributing
+
+### Generator structure
+A yeoman generator consists out of multiple sub-generators composed together. Each of them has their own directory in `generators`, the default beeing `generators/app`.
+Each sub-generator can be run like so: `yo beet:<sub-generator>`.
+
+```shell
+# Directory structure:
+generators/
+├─app
+├─datapack
+├─git
+├─poetry
+└─resourcepack
+```
+
+### Test the generator
+To try out the generator during development, run this command from the root of the project.
+It installs your local files as a symlinked global module.
+```shell
+npm link
+```
+To remove it run this command from the root directory of the project.
+```
+npm unlink
 ```
 
 ## License

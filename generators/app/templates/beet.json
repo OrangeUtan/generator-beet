@@ -2,6 +2,7 @@
     "name": "<%= name %>",
     "author": "<%= author %>",
     "description": "<%= description %>",
+    "version": "<%= version %>",
     <%_ if (resourcepack) { -%>
     "resource_pack": {
         "load": ["resourcepack"],
@@ -13,6 +14,12 @@
         "load": ["datapack"],
         "pack_format": <%= packFormat %>
     },
+    <%_ } -%>
+    <%_ if (selectedPluginIds.size > 0) { -%>
+    "pipeline": <%- JSON.stringify(Array.from(selectedPluginIds),null,8) %>,
+    <%_ } -%>
+    <%_ if (configMeta) { -%>
+    "meta": <%- JSON.stringify(configMeta,null,8) %>,
     <%_ } -%>
     "output": "build"
 }

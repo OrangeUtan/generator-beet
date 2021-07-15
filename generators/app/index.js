@@ -1,191 +1,176 @@
 "use strict";
 
-const Generator = require("yeoman-generator");
+const BaseGenerator = require("../generator-base");
+const utils = require("../utils");
+const promptPlugins = require("./plugins");
 
-module.exports = class extends Generator {
-    constructor(args, options) {
-        super(args, options);
+const BEET_CONFIG_PATH = "beet.json";
 
-        this.argument("name", {
-            type: String,
-            required: false
-        });
+module.exports = class extends BaseGenerator {
+	constructor(args, options) {
+		super(args, options);
 
-        this.option("datapack", {
-            type: Boolean,
-            require: false,
-            description: "Generate datapack"
-        });
+		this.option("name", {
+			type: String,
+			required: true
+		});
 
-        this.option("resourcepack", {
-            type: Boolean,
-            require: false,
-            description: "Generate resourcepack"
-        });
+		this.option("datapack", {
+			type: Boolean,
+			require: false,
+			description: "Generate datapack"
+		});
 
-        this.option("license", {
-            type: Boolean,
-            require: false,
-            description: "Include a license"
-        });
+		this.option("resourcepack", {
+			type: Boolean,
+			require: false,
+			description: "Generate resourcepack"
+		});
 
-        this.option("git", {
-            type: Boolean,
-            require: false,
-            description: "Initialize git repository"
-        });
+		this.option("license", {
+			type: Boolean,
+			require: false,
+			description: "Include a license"
+		});
 
-        this.option("python", {
-            type: Boolean,
-            require: false,
-            description: "Create a Python project"
-        });
+		this.option("git", {
+			type: Boolean,
+			require: false,
+			description: "Initialize git repository"
+		});
 
-        this.props = {
-            name: this.options.name,
-            datapack: this.options.datapack,
-            resourcepack: this.options.resourcepack,
-            license: this.options.license,
-            git: this.options.git,
-            python: this.options.python
-        };
-    }
+		this.option("python", {
+			type: Boolean,
+			require: false,
+			description: "Create a Python project"
+		});
+	}
 
-    async prompting() {
-        await this._promptArgs();
+	async prompting() {
+		await this._promptProjectInfo();
+		await promptPlugins(this);
+		await this._promptSubGenerators();
+	}
 
-        this.props.githubUsername = await this._fetchGithubUsername();
-        this.props.packFormat = 7;
-        await this._promptAndUpdateProps([
-            {
-                type: "input",
-                name: "description",
-                message: "Description"
-            },
-            {
-                type: "input",
-                name: "version",
-                message: "Version",
-                default: "0.0.0"
-            },
-            {
-                type: "input",
-                name: "author",
-                message: "Author",
-                default: this.user.git.name()
-            },
-            {
-                type: "input",
-                name: "email",
-                message: "Author Email",
-                default: this.user.git.email()
-            },
-            {
-                type: "input",
-                name: "authorWebsite",
-                message: "Author Website",
-                default: this.props.githubUsername
-                    ? `https://github.com/${this.props.githubUsername}`
-                    : ""
-            }
-        ]);
+	async _promptProjectInfo() {
+		await this.promptAndUpdateOptions([
+			{
+				type: "input",
+				name: "name",
+				message: "Project name",
+				default: this.appname,
+				when: this.options.name === undefined,
+				validate: (input, _) => (input === "" ? "Project name cannot be empty" : true)
+			},
+			{
+				type: "input",
+				name: "description",
+				message: "Description",
+				when: this.options.description === undefined
+			},
+			{
+				type: "input",
+				name: "version",
+				message: "Version",
+				default: "0.0.0",
+				when: this.options.version === undefined
+			},
+			{
+				type: "input",
+				name: "author",
+				message: "Author",
+				default: this.user.git.name(),
+				when: this.options.author === undefined
+			},
+			{
+				type: "input",
+				name: "email",
+				message: "Author Email",
+				default: this.user.git.email()
+			}
+		]);
+	}
 
-        await this._promptOptions();
-    }
+	async _promptSubGenerators() {
+		await this.promptAndUpdateOptions([
+			{
+				type: "confirm",
+				name: "datapack",
+				message: "Generate datapack?",
+				default: true,
+				when: this.options.datapack === undefined
+			},
+			{
+				type: "confirm",
+				name: "resourcepack",
+				message: "Generate resourcepack?",
+				default: true,
+				when: this.options.resourcepack === undefined
+			},
+			{
+				type: "confirm",
+				name: "license",
+				message: "Include a license?",
+				default: true,
+				when: this.options.license === undefined
+			}
+		]);
 
-    async _fetchGithubUsername() {
-        try {
-            return await this.user.github.username();
-        } catch {
-            return "";
-        }
-    }
+		await this.promptAndUpdateOptions([
+			{
+				type: "input",
+				name: "authorWebsite",
+				message: "Author Website",
+				default: this.options.githubUsername
+					? `https://github.com/${this.options.githubUsername}`
+					: "",
+				when: this.options.license
+			},
+			{
+				type: "confirm",
+				name: "git",
+				message: "Initialize git repository?",
+				default: true,
+				when: this.options.git === undefined
+			},
+			{
+				type: "confirm",
+				name: "python",
+				message: "Create a Python project? (recommended)",
+				default: true,
+				when: this.options.python === undefined
+			}
+		]);
+	}
 
-    async _promptAndUpdateProps(prompts) {
-        this.props = Object.assign({}, this.props, await this.prompt(prompts));
-    }
+	default() {
+		if (this.options.datapack) {
+			this.composeWith(require.resolve("../datapack/index"), { ...this.options });
+		}
 
-    async _promptArgs() {
-        await this._promptAndUpdateProps([
-            {
-                type: "input",
-                name: "name",
-                message: "Project name",
-                default: this.appname,
-                when: this.options.name === undefined,
-                validate: (input, _) => (input === "" ? "Project name cannot be empty" : true)
-            }
-        ]);
-    }
+		if (this.options.resourcepack) {
+			this.composeWith(require.resolve("../resourcepack/index"), { ...this.options });
+		}
 
-    async _promptOptions() {
-        await this._promptAndUpdateProps([
-            {
-                type: "confirm",
-                name: "datapack",
-                message: "Generate datapack?",
-                default: true,
-                when: this.options.datapack === undefined
-            },
-            {
-                type: "confirm",
-                name: "resourcepack",
-                message: "Generate resourcepack?",
-                default: true,
-                when: this.options.resourcepack === undefined
-            },
-            {
-                type: "confirm",
-                name: "license",
-                message: "Include a license?",
-                default: true,
-                when: this.options.license === undefined
-            },
-            {
-                type: "confirm",
-                name: "git",
-                message: "Initialize git repository?",
-                default: true,
-                when: this.options.git === undefined
-            },
-            {
-                type: "confirm",
-                name: "python",
-                message: "Create a Python project? (recommended)",
-                default: true,
-                when: this.options.python === undefined
-            }
-        ]);
-    }
+		if (this.options.license) {
+			this.composeWith(require.resolve("generator-license"), {
+				name: this.options.author,
+				email: this.options.email,
+				website: this.options.authorWebsite,
+				defaultLicense: "MIT"
+			});
+		}
 
-    default() {
-        if (this.props.datapack) {
-            this.composeWith(require.resolve("../datapack/index"), { ...this.props });
-        }
+		if (this.options.git) {
+			this.composeWith(require.resolve("../git/index"), { ...this.options });
+		}
 
-        if (this.props.resourcepack) {
-            this.composeWith(require.resolve("../resourcepack/index"), { ...this.props });
-        }
+		if (this.options.python) {
+			this.composeWith(require.resolve("../poetry/index"), { ...this.options });
+		}
+	}
 
-        if (this.props.license) {
-            this.composeWith(require.resolve("generator-license"), {
-                name: this.props.author,
-                email: this.props.email,
-                website: this.props.authorWebsite,
-                defaultLicense: "MIT"
-            });
-        }
-
-        if (this.props.git) {
-            this.composeWith(require.resolve("../git/index"), { ...this.props });
-        }
-
-        if (this.props.python) {
-            this.composeWith(require.resolve("../poetry/index"), { ...this.props });
-        }
-    }
-
-    writing() {
-        this.fs.copyTpl(this.templatePath(), this.destinationPath(), { ...this.props });
-    }
+	configuring() {
+		this.fs.copyTpl(this.templatePath(), this.destinationPath(), { ...this.options });
+	}
 };

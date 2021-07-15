@@ -1,7 +1,10 @@
 {
     "extend": ["beet.json"],
     "version": "<%= version %>",
-    "pipeline": ["beet.contrib.minify_json"],
+    "pipeline": [
+        "beet.contrib.minify_json",
+        "beet.contrib.minify_function"
+    ],
     <%_ if (resourcepack) { -%>
     "resource_pack": {
         "zipped": true,

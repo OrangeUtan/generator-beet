@@ -1,5 +1,12 @@
 Changelog
 
+## [1.1.1](https://github.com/OrangeUtan/generator-beet/compare/v1.1.0...v1.1.1) (2021-07-16)
+
+
+### Bug Fixes
+
+* Initializing git repo when one already exists ([3aac0bc](https://github.com/OrangeUtan/generator-beet/commit/3aac0bce08d37aff4cded7111f677af5b715a188))
+
 # [1.1.0](https://github.com/OrangeUtan/generator-beet/compare/v1.0.2...v1.1.0) (2021-07-16)
 
 

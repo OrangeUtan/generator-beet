@@ -1,5 +1,12 @@
 Changelog
 
+# [1.1.0](https://github.com/OrangeUtan/generator-beet/compare/v1.0.2...v1.1.0) (2021-07-16)
+
+
+### Features
+
+* Configure included plugins ([cb54fb1](https://github.com/OrangeUtan/generator-beet/commit/cb54fb1362f4558f2f150035143de68f84349448))
+
 ## [1.0.2](https://github.com/OrangeUtan/generator-beet/compare/v1.0.1...v1.0.2) (2021-06-11)
 
 

@@ -130,7 +130,7 @@ module.exports = class extends BaseGenerator {
 				type: "confirm",
 				name: "git",
 				message: "Initialize git repository?",
-				default: true,
+				default: !this.isGitDir("."),
 				when: this.options.git === undefined
 			},
 			{
